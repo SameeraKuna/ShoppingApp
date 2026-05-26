@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useCallback } from 'react-native';
 import { CoveColors } from '@/constants/theme';
 import { useWishlist } from '@/context';
 import { useAppSelector } from '@/redux/hooks';
@@ -10,27 +10,27 @@ export default function TabsLayout() {
   const cartCount = useAppSelector(selectCartTotalCount);
   const { items: wishlistItems } = useWishlist();
 
-  const CartTabIcon = ({ color, size }) => (
+  const CartTabIcon = useCallback(({ color, size }: { color: string; size: number }) => (
     <View>
       <Ionicons name="bag" color={color} size={size} />
       {cartCount > 0 && (
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>{cartCount}</Text>
+          <Text style={styles.badgeText}>{cartCount > 99 ? '99+' : cartCount}</Text>
         </View>
       )}
     </View>
-  );
+  ), [cartCount]);
 
-  const WishlistTabIcon = ({ color, size }) => (
+  const WishlistTabIcon = useCallback(({ color, size }: { color: string; size: number }) => (
     <View>
       <Ionicons name="heart" color={color} size={size} />
       {wishlistItems.length > 0 && (
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>{wishlistItems.length}</Text>
+          <Text style={styles.badgeText}>{wishlistItems.length > 99 ? '99+' : wishlistItems.length}</Text>
         </View>
       )}
     </View>
-  );
+  ), [wishlistItems.length]);
 
   return (
     <Tabs
@@ -96,8 +96,9 @@ const styles = StyleSheet.create({
     right: -8,
     backgroundColor: CoveColors.primary,
     borderRadius: 10,
-    width: 18,
+    minWidth: 18,
     height: 18,
+    paddingHorizontal: 3,
     justifyContent: 'center',
     alignItems: 'center',
   },

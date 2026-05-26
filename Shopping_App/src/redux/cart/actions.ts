@@ -2,13 +2,14 @@ import { createAction } from '@reduxjs/toolkit';
 
 export const addToCart = createAction(
   'cart/ADD_ITEM',
-  (productId: string, name: string, price: number, color?: string, size?: string) => ({
+  (productId: string, name: string, price: number, color?: string, size?: string, image?: string) => ({
     payload: {
       productId,
       name,
       price,
       color,
       size,
+      image,
     },
   }),
 );

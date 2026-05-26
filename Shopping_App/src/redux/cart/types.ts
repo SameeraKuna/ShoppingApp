@@ -11,40 +11,9 @@ export interface CartItem {
   quantity: number;
   color?: string;
   size?: string;
+  image?: string;
 }
 
 export interface CartState {
   items: CartItem[];
 }
-
-export interface AddItemAction {
-  type: 'cart/ADD_ITEM';
-  payload: {
-    productId: string;
-    name: string;
-    price: number;
-    color?: string;
-    size?: string;
-  };
-}
-
-export interface RemoveItemAction {
-  type: 'cart/REMOVE_ITEM';
-  payload: {
-    cartItemId: string;
-  };
-}
-
-export interface UpdateQuantityAction {
-  type: 'cart/UPDATE_QUANTITY';
-  payload: {
-    cartItemId: string;
-    quantity: number;
-  };
-}
-
-export interface ClearCartAction {
-  type: 'cart/CLEAR_CART';
-}
-
-export type CartAction = AddItemAction | RemoveItemAction | UpdateQuantityAction | ClearCartAction;

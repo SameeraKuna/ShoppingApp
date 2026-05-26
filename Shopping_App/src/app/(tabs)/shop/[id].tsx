@@ -58,7 +58,7 @@ export default function ProductDetailScreen() {
     setIsAddingToCart(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 300));
-      dispatch(addToCart(productInfo.id, product.name, product.price, selectedColor, selectedSize));
+      dispatch(addToCart(productInfo.id, product.name, product.price, selectedColor, selectedSize, productInfo.image));
       Alert.alert('Success', 'Product added to your cart!');
     } finally {
       setIsAddingToCart(false);
@@ -98,7 +98,7 @@ export default function ProductDetailScreen() {
           <View style={styles.titleRow}>
             <View style={styles.titleSection}>
               <Text style={styles.productName}>{product.name}</Text>
-              <Text style={styles.price}>${product.price}</Text>
+              <Text style={styles.price}>${product.price.toFixed(2)}</Text>
             </View>
             <Pressable
               style={styles.heartButton}
@@ -182,7 +182,7 @@ export default function ProductDetailScreen() {
           {isAddingToCart ? (
             <ActivityIndicator color="#FFFFFF" />
           ) : (
-            <Text style={styles.addButtonText}>Add to bag — ${product.price}</Text>
+            <Text style={styles.addButtonText}>Add to bag — ${product.price.toFixed(2)}</Text>
           )}
         </Pressable>
       </View>

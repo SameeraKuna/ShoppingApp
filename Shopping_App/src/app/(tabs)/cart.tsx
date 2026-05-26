@@ -7,6 +7,8 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CoveColors } from '@/constants/theme';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
@@ -15,6 +17,7 @@ import { removeFromCart, updateCartQuantity } from '@/redux/cart/actions';
 import { CartItem } from '@/redux/cart/types';
 
 export default function CartScreen() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const items = useAppSelector(selectCartItems);
   const totalPrice = useAppSelector(selectCartTotalPrice);
@@ -26,7 +29,14 @@ export default function CartScreen() {
   const renderCartItem = ({ item }: { item: CartItem }) => (
     <View style={styles.cartItem}>
       <View style={styles.itemDetails}>
-        <View style={styles.itemImage} />
+        <Image
+          source={{
+            uri: item.image || 'https://images.unsplash.com/photo-1599122235394-6eda51edd3c9?w=200&h=200&fit=crop',
+          }}
+          style={styles.itemImage}
+          contentFit="cover"
+          cachePolicy="memory-disk"
+        />
         <View style={styles.itemInfo}>
           <Text style={styles.itemName}>{item.name}</Text>
           <View style={styles.itemMeta}>
@@ -50,7 +60,7 @@ export default function CartScreen() {
           <Pressable
             style={styles.quantityButton}
             onPress={() => {
-              dispatch(updateCartQuantity(item.id, item.quantity - 1) as any);
+              dispatch(updateCartQuantity(item.id, item.quantity - 1));
             }}
           >
             <Ionicons name="remove" size={16} color={CoveColors.textPrimary} />
@@ -59,7 +69,7 @@ export default function CartScreen() {
           <Pressable
             style={styles.quantityButton}
             onPress={() => {
-              dispatch(updateCartQuantity(item.id, item.quantity + 1) as any);
+              dispatch(updateCartQuantity(item.id, item.quantity + 1));
             }}
           >
             <Ionicons name="add" size={16} color={CoveColors.textPrimary} />
@@ -68,7 +78,18 @@ export default function CartScreen() {
         <Pressable
           style={styles.removeButton}
           onPress={() => {
-            dispatch(removeFromCart(item.id) as any);
+            Alert.alert(
+              'Remove Item',
+              `Are you sure you want to remove ${item.name} from your cart?`,
+              [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Remove',
+                  onPress: () => dispatch(removeFromCart(item.id)),
+                  style: 'destructive',
+                },
+              ]
+            );
           }}
         >
           <Ionicons name="trash-outline" size={20} color="#FF4444" />
@@ -103,6 +124,9 @@ export default function CartScreen() {
             <Ionicons name="bag-outline" size={64} color={CoveColors.textSecondary} />
             <Text style={styles.emptyTitle}>Your cart is empty</Text>
             <Text style={styles.emptyMessage}>Add some items to get started!</Text>
+            <Pressable style={styles.emptyButton} onPress={() => router.push('/(tabs)/shop')}>
+              <Text style={styles.emptyButtonText}>Start Shopping</Text>
+            </Pressable>
           </View>
         }
       />
@@ -139,7 +163,7 @@ export default function CartScreen() {
             <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
           </Pressable>
 
-          <Pressable style={styles.continueShoppingButton} onPress={() => {}}>
+          <Pressable style={styles.continueShoppingButton} onPress={() => router.push('/(tabs)/shop')}>
             <Text style={styles.continueShoppingText}>Continue Shopping</Text>
           </Pressable>
         </View>
@@ -323,6 +347,19 @@ const styles = StyleSheet.create({
   },
   continueShoppingText: {
     color: CoveColors.textPrimary,
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  emptyButton: {
+    backgroundColor: CoveColors.primary,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    marginTop: 16,
+  },
+  emptyButtonText: {
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',

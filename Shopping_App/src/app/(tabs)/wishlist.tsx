@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, FlatList, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CoveColors } from '@/constants/theme';
@@ -33,6 +33,9 @@ export default function WishlistScreen() {
             <Ionicons name="heart-outline" size={64} color={CoveColors.textSecondary} />
             <Text style={styles.emptyTitle}>Your wishlist is empty</Text>
             <Text style={styles.emptyMessage}>Save your favorite products here</Text>
+            <Pressable style={styles.emptyButton} onPress={() => router.push('/(tabs)/shop')}>
+              <Text style={styles.emptyButtonText}>Discover Products</Text>
+            </Pressable>
           </View>
         }
         renderItem={({ item }) => (
@@ -84,6 +87,19 @@ const styles = StyleSheet.create({
   emptyMessage: {
     fontSize: 14,
     color: CoveColors.textSecondary,
+  },
+  emptyButton: {
+    backgroundColor: CoveColors.primary,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    marginTop: 16,
+  },
+  emptyButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   gridContainer: {
     paddingHorizontal: 12,

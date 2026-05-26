@@ -11,6 +11,7 @@ interface ProductCardProps {
   category: string;
   rating: number;
   reviewCount: number;
+  image?: string;
   onPress?: () => void;
   onWishlistToggle?: () => void;
   isWishlisted?: boolean;
@@ -24,20 +25,19 @@ export function ProductCard({
   category,
   rating,
   reviewCount,
+  image,
   onPress,
   onWishlistToggle,
   isWishlisted = false,
   color = 'tan',
 }: ProductCardProps) {
-  const stripeColor = getStripeColor(color);
-
   return (
     <Pressable onPress={onPress} style={styles.container}>
       {/* Product image */}
       <View style={styles.imageContainer}>
         <Image
           source={{
-            uri: 'https://images.unsplash.com/photo-1599122235394-6eda51edd3c9?w=400&h=400&fit=crop',
+            uri: image || 'https://images.unsplash.com/photo-1599122235394-6eda51edd3c9?w=400&h=400&fit=crop',
           }}
           style={styles.image}
           contentFit="cover"
@@ -68,24 +68,12 @@ export function ProductCard({
           {name}
         </Text>
         <View style={styles.priceRating}>
-          <Text style={styles.price}>${price}</Text>
+          <Text style={styles.price}>${price.toFixed(2)}</Text>
           <StarRating rating={Math.round(rating)} size="small" />
         </View>
       </View>
     </Pressable>
   );
-}
-
-function getStripeColor(color: string) {
-  const colors: Record<string, string> = {
-    tan: '#D9C7AF',
-    cream: '#E8D4BC',
-    green: '#B8D4B0',
-    sage: '#C5D9C0',
-    navy: '#4A5B7F',
-    rose: '#D9B5B0',
-  };
-  return colors[color] || colors.tan;
 }
 
 const styles = StyleSheet.create({

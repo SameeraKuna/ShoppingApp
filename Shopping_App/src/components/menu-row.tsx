@@ -1,9 +1,10 @@
+import { ComponentProps } from 'react';
 import { View, Pressable, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { CoveColors } from '@/constants/theme';
 
 interface MenuRowProps {
-  icon: string;
+  icon: ComponentProps<typeof Ionicons>['name'];
   title: string;
   subtitle?: string;
   onPress?: () => void;
@@ -43,7 +44,7 @@ export function MenuRow({
 }: MenuRowProps) {
   return (
     <Pressable onPress={onPress} style={styles.container}>
-      <Ionicons name={icon as any} size={24} color={CoveColors.primary} />
+      <Ionicons name={icon} size={24} color={CoveColors.primary} />
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
         {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}

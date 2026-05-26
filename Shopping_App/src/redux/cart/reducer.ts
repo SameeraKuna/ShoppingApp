@@ -10,7 +10,7 @@ const initialState: CartState = {
 export const cartReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(addToCart, (state, action) => {
-      const { productId, name, price, color, size } = action.payload;
+      const { productId, name, price, color, size, image } = action.payload;
 
       const existingItem = state.items.find(
         (item) =>
@@ -28,6 +28,7 @@ export const cartReducer = createReducer(initialState, (builder) => {
           quantity: 1,
           color,
           size,
+          image,
         };
         state.items.push(newItem);
       }

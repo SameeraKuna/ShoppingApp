@@ -34,7 +34,12 @@ export default function ProfileScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.emptyContainer}>
+          <Ionicons name="person-outline" size={64} color={CoveColors.textSecondary} />
           <Text style={styles.emptyTitle}>Not signed in</Text>
+          <Text style={styles.emptyMessage}>Sign in to access your account and orders</Text>
+          <Pressable style={styles.signInButton} onPress={() => router.push('/sign-in')}>
+            <Text style={styles.signInButtonText}>Sign In</Text>
+          </Pressable>
         </View>
       </SafeAreaView>
     );
@@ -88,7 +93,7 @@ export default function ProfileScreen() {
           <MenuRow
             icon="heart"
             title="Wishlist"
-            subtitle="8 saved items"
+            subtitle={`${wishlistItems.length} ${wishlistItems.length === 1 ? 'saved item' : 'saved items'}`}
             showChevron
           />
           <MenuRow
@@ -148,6 +153,26 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: CoveColors.textSecondary,
+  },
+  emptyMessage: {
+    fontSize: 14,
+    color: CoveColors.textSecondary,
+    marginTop: 8,
+    marginBottom: 20,
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  signInButton: {
+    backgroundColor: CoveColors.primary,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+  },
+  signInButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   profileHeader: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { CoveColors } from '@/constants/theme';
 import { useAuth } from '@/context';
@@ -17,9 +18,11 @@ import { useAuth } from '@/context';
 export default function SignInScreen() {
   const router = useRouter();
   const { signIn, isLoading } = useAuth();
-  const [email, setEmail] = useState('hannah@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const passwordRef = useRef<TextInput>(null);
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -76,6 +79,8 @@ export default function SignInScreen() {
               }}
               keyboardType="email-address"
               autoCapitalize="none"
+              returnKeyType="next"
+              onSubmitEditing={() => passwordRef.current?.focus()}
               editable={!isLoading}
             />
             {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
@@ -84,22 +89,34 @@ export default function SignInScreen() {
           <View style={styles.formGroup}>
             <View style={styles.labelRow}>
               <Text style={styles.label}>PASSWORD</Text>
-              <Pressable onPress={() => console.log('Forgot password')}>
+              <Pressable onPress={() => {}}>
                 <Text style={styles.forgotLink}>Forgot?</Text>
               </Pressable>
             </View>
-            <TextInput
-              style={[styles.input, errors.password && styles.inputError]}
-              placeholder="••••••••"
-              placeholderTextColor={CoveColors.textMuted}
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                if (errors.password) setErrors({ ...errors, password: undefined });
-              }}
-              secureTextEntry
-              editable={!isLoading}
-            />
+            <View style={[styles.input, styles.passwordContainer, errors.password && styles.inputError]}>
+              <TextInput
+                ref={passwordRef}
+                style={styles.passwordInput}
+                placeholder="••••••••"
+                placeholderTextColor={CoveColors.textMuted}
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  if (errors.password) setErrors({ ...errors, password: undefined });
+                }}
+                secureTextEntry={!isPasswordVisible}
+                returnKeyType="done"
+                onSubmitEditing={handleSignIn}
+                editable={!isLoading}
+              />
+              <Pressable onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                <Ionicons
+                  name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
+                  color={CoveColors.textSecondary}
+                />
+              </Pressable>
+            </View>
             {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
           </View>
 
@@ -122,18 +139,24 @@ export default function SignInScreen() {
           </View>
 
           <View style={styles.socialContainer}>
-            <Pressable style={styles.socialButton} onPress={() => console.log('Apple')}>
-              <Text style={styles.socialButtonText}>🍎 Apple</Text>
+            <Pressable style={styles.socialButton} onPress={() => {}}>
+              <View style={styles.socialButtonContent}>
+                <Ionicons name="logo-apple" size={20} color={CoveColors.textPrimary} />
+                <Text style={styles.socialButtonText}>Apple</Text>
+              </View>
             </Pressable>
-            <Pressable style={styles.socialButton} onPress={() => console.log('Google')}>
-              <Text style={styles.socialButtonText}>🔍 Google</Text>
+            <Pressable style={styles.socialButton} onPress={() => {}}>
+              <View style={styles.socialButtonContent}>
+                <Ionicons name="logo-google" size={20} color={CoveColors.textPrimary} />
+                <Text style={styles.socialButtonText}>Google</Text>
+              </View>
             </Pressable>
           </View>
         </View>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>New to Cove?</Text>
-          <Pressable onPress={() => console.log('Create account')}>
+          <Pressable onPress={() => {}}>
             <Text style={styles.createAccountLink}>Create account</Text>
           </Pressable>
         </View>
@@ -214,6 +237,16 @@ const styles = StyleSheet.create({
     color: CoveColors.textPrimary,
     backgroundColor: CoveColors.card,
   },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  passwordInput: {
+    flex: 1,
+    fontSize: 14,
+    color: CoveColors.textPrimary,
+  },
   inputError: {
     borderColor: '#FF4444',
   },
@@ -264,6 +297,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 12,
     backgroundColor: CoveColors.card,
+  },
+  socialButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
   socialButtonText: {
     fontSize: 14,

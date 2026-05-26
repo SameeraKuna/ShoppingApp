@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
+  Pressable,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -21,6 +22,28 @@ export default function SearchScreen() {
   const { has: isWishlisted, toggle: toggleWishlist } = useWishlist();
   const products = useAppSelector(selectProducts);
   const [searchQuery, setSearchQuery] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+    debounceTimeout.current = setTimeout(() => {
+      setSearchQuery(inputValue);
+    }, 300);
+
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, [inputValue]);
+
+  const handleClearSearch = () => {
+    setInputValue('');
+    setSearchQuery('');
+  };
 
   const filteredProducts = useMemo(() => {
     if (!searchQuery.trim()) return products;
@@ -46,10 +69,15 @@ export default function SearchScreen() {
                 style={styles.searchInput}
                 placeholder="Search products..."
                 placeholderTextColor={CoveColors.textMuted}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
+                value={inputValue}
+                onChangeText={setInputValue}
                 autoFocus
               />
+              {inputValue.length > 0 && (
+                <Pressable onPress={handleClearSearch}>
+                  <Ionicons name="close-circle" size={20} color={CoveColors.textSecondary} />
+                </Pressable>
+              )}
             </View>
           </>
         }
@@ -68,7 +96,6 @@ export default function SearchScreen() {
         }
         renderItem={({ item }) => (
           <ProductCard
-            id={item.id}
             {...item}
             isWishlisted={isWishlisted(item.id)}
             onPress={() => router.push(`/(tabs)/shop/${item.id}`)}
