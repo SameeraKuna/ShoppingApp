@@ -1,6 +1,7 @@
+import { useCallback } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, useCallback } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { CoveColors } from '@/constants/theme';
 import { useWishlist } from '@/context';
 import { useAppSelector } from '@/redux/hooks';
