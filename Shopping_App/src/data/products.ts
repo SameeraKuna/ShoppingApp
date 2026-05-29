@@ -666,7 +666,7 @@ export const PRODUCT_DETAILS: Record<string, ProductDetail> = {
   },
 };
 
-export const CATEGORIES = ['All', 'SOFT GOODS', 'CERAMICS', 'CANDLES', 'TABLETOP', 'HOME', 'BEAUTY'];
+export const CATEGORIES = ['All', 'Beauty', 'Fragrances', 'Furniture', 'Groceries'];
 
 export function getProductsByCategory(category: string): Product[] {
   if (category === 'All') return PRODUCTS;
